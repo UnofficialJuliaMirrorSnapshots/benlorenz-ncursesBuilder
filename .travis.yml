@@ -1,0 +1,32 @@
+language: julia
+os:
+- linux
+julia:
+- 1.2
+notifications:
+  email: false
+git:
+  depth: 99999999
+cache:
+  timeout: 1000
+  directories:
+  - downloads
+env:
+  global:
+  - BINARYBUILDER_DOWNLOADS_CACHE=downloads
+  - BINARYBUILDER_AUTOMATIC_APPLE=true
+sudo: required
+before_script:
+- julia -e 'using Pkg; pkg"add BinaryProvider"; pkg"add BinaryBuilder#master"; Pkg.build()'
+script:
+- julia  --color=yes build_tarballs.jl
+deploy:
+  provider: releases
+  api_key:
+    secure: pS0NQUeAMULB3lvV77lCe2b03gzeL/oOQ6joJE10RNoE/l+0a15LOFRNZfDTJYsrahNccn7U9EBdrBwJuPtQHWwAFLQFRNxYkl9aYm55FDAMgVgwwtiJfcB5M9Mj+Phv5Pfs12Ip6NZWBwAakLr90yaocduAYkRjv+drPyQH8Fxoz9dytPMqLjXy6pPDYvAy1nlRVtDAf+/hRhY0rdJTA5tvRAZlIBDasB+xrWT/rHrdQx1hFgaspjxOkJN/A5kucvjUGNMGee8gKPSi8kGwTleCPQvexUC9XtksCa0ykalYgF8uqzGsD8+syYhrtz7A8Tv7sPy5mLSddngaTOZALhwHmyze4jQjUaVJi9xO/UG4ebv+sc2HJSWEb09pBCxPTBKKKKDP62uWTDS1DWRdlMiauAmZaSHKCALOR2h64Z3ZiE6Lr4kNQbri0noEjZdTr8diiiKL3gaP9P/tV18dN/GJ/jOD5XpjXLh4ySb6RY9RrdxKiuNnQ0hQX4CdBtuZSwK07pv16m/w1DrjyPbFc2eGpftUK4+7axYkWATqfkULMkmKobA8gKt4Ym30AhPW2e6YrATI+mslOx5BL3xilIC0CZzEW6bumO9jo9ymQ5NVXcKiS5XQ0UcII/U9pxG6k2y2g0JJMIySNt8GbttStswp3ERKmyC1+Epp0qirBa8=
+  file: products/*
+  file_glob: true
+  skip_cleanup: true
+  on:
+    repo: benlorenz/ncursesBuilder
+    tags: true
